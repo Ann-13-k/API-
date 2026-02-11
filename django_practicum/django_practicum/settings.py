@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,6 +42,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'polls',
 ]
+
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
+DEBUG = os.environ.get("DEBUG") in ('1', 'True')
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1").split(",")
+
+STATIC_ROOT = BASE_DIR / 'static'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -77,8 +84,12 @@ WSGI_APPLICATION = 'django_practicum.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'default_db_name'),
+        'USER': os.getenv('DB_USER', 'myprojectuser'),
+        'PASSWORD': os.getenv('DB_PASS', 'password'),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+        'PORT': os.getenv('DB_PORT', 5432),
     }
 }
 
